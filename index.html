@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Quieres tener una cita conmigo?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --rose:#d9628a; --rose-soft:#fbd9e4; --blush:#fff5f7; --wine:#74304a; --mauve:#a0607a; --line:#f1cfdc; --peach:#ffe1d8;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;min-height:100%;font-family:'DM Sans',system-ui,sans-serif;color:var(--wine);
+  background:linear-gradient(180deg,#fff 0%,#fff3f6 60%,#ffeaf0 100%);background-color:#fff5f7;
+  display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow-x:hidden;position:relative;
+}
+.blob{position:fixed;border-radius:50%;z-index:0;pointer-events:none}
+.b1{width:420px;height:420px;right:-140px;top:-170px;background:radial-gradient(circle at 40% 60%,#ffd3e0,#ffe3ea)}
+.b2{width:360px;height:360px;left:-130px;bottom:-190px;background:radial-gradient(circle at 60% 40%,var(--peach),#fff0ec)}
+.deco{position:fixed;z-index:0;pointer-events:none;color:var(--rose);opacity:.35}
+.deco svg{display:block;width:100%;height:100%;fill:currentColor}
+
+.card{
+  position:relative;z-index:1;width:100%;max-width:690px;background:#fff;border-radius:36px;padding:12px;
+  box-shadow:0 25px 70px rgba(217,98,138,.18);
+}
+.inner{
+  border:1px solid var(--line);border-radius:28px;padding:44px 40px 34px;text-align:center;
+  background:radial-gradient(circle at 50% 18%,#fffafb,#fff 70%);min-height:420px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.divider{display:flex;align-items:center;gap:10px;color:var(--rose);margin-bottom:22px}
+.divider i{display:block;width:50px;height:1px;background:var(--rose);opacity:.45}
+.divider svg{width:14px;height:14px;fill:currentColor}
+.badge{
+  width:58px;height:58px;border-radius:50%;border:1px solid var(--line);background:var(--blush);
+  display:grid;place-items:center;color:var(--rose);margin-bottom:22px;box-shadow:0 0 30px rgba(217,98,138,.25);
+}
+.badge svg{width:24px;height:24px;fill:currentColor}
+.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--rose);margin:0 0 14px}
+h1{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:clamp(32px,7vw,56px);line-height:1.1;margin:0 0 14px;color:var(--wine)}
+.sub{margin:0 auto 28px;max-width:34ch;font-size:15px;line-height:1.6;color:var(--mauve)}
+
+/* Botones */
+.answers{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;min-height:56px}
+.btn{
+  font:700 16px 'DM Sans',sans-serif;border:0;border-radius:999px;padding:15px 38px;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.btn:focus-visible{outline:3px solid var(--wine);outline-offset:3px}
+.yes{background:linear-gradient(135deg,#ec7ca0,var(--rose));color:#fff;box-shadow:0 10px 24px rgba(217,98,138,.4)}
+.yes:hover{transform:translateY(-2px) scale(1.04)}
+.no{background:#fff;color:var(--mauve);border:1px solid var(--line)}
+.no-slot{display:inline-block}
+.no.flying{position:fixed;z-index:20;margin:0;transition:left .45s cubic-bezier(.3,1.4,.5,1),top .45s cubic-bezier(.3,1.4,.5,1),opacity .3s}
+.no.gone{opacity:0;pointer-events:none}
+.oops{margin:22px 0 0;font-family:'Playfair Display',serif;font-style:italic;font-size:19px;color:var(--rose);min-height:28px}
+
+/* Detalles */
+.details{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;width:100%;margin:6px 0 26px;text-align:left}
+.field.full{grid-column:1/-1}
+.field span{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--mauve);margin:0 0 6px 4px}
+.field div{border:1px solid var(--line);border-radius:999px;padding:14px 20px;background:#fffdfd;font-size:16px;color:var(--wine)}
+.map{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:22px;padding:10px 18px 10px 10px;background:var(--blush);transition:transform .15s ease,box-shadow .15s ease}
+.map:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(217,98,138,.18)}
+.map:focus-visible{outline:3px solid var(--wine);outline-offset:3px}
+.map-thumb{flex:none;width:64px;height:64px;border-radius:16px;display:grid;place-items:center;color:var(--rose);background:linear-gradient(90deg,transparent 46%,#fff 46% 54%,transparent 54%),linear-gradient(0deg,transparent 58%,#fff 58% 66%,transparent 66%),linear-gradient(135deg,#ffe8ee,#ffdce7)}
+.map-thumb svg{width:26px;height:26px;fill:currentColor;filter:drop-shadow(0 3px 4px rgba(217,98,138,.4))}
+.map-txt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.map-txt small{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--mauve)}
+.map-txt strong{font-size:15px;font-weight:500;color:var(--wine);overflow-wrap:anywhere}
+.map-txt em{font-family:'Playfair Display',serif;font-size:13px;color:var(--rose)}
+.mapbox{grid-column:1/-1;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--blush)}
+.mapbox iframe{display:block;width:100%;height:220px;border:0}
+.map-cap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;font-size:14px;color:var(--wine)}
+.map-cap a{flex:none;font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--rose);text-decoration:none}
+.map-cap a:hover{text-decoration:underline}
+.footer{margin:0;font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:16px;color:var(--rose)}
+.footer b{font-style:normal;font-weight:400;opacity:.7;margin:0 8px}
+
+.hidden{display:none!important}
+#accepted{animation:pop .6s ease both;display:flex;flex-direction:column;align-items:center;width:100%}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.confetti{position:fixed;z-index:30;pointer-events:none;color:var(--rose);animation:fall linear forwards}
+.confetti svg{width:100%;height:100%;fill:currentColor;display:block}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0}}
+@media(max-width:520px){.inner{padding:34px 20px 28px}.details{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="deco" style="width:20px;height:20px;left:10%;top:16%"><svg viewBox="0 0 24 24"><use href="#heart"/></svg></div>
+<div class="deco" style="width:12px;height:12px;right:22%;top:10%"><svg viewBox="0 0 24 24"><use href="#heart"/></svg></div>
+<div class="deco" style="width:18px;height:18px;right:8%;bottom:16%"><svg viewBox="0 0 24 24"><use href="#heart"/></svg></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.3C.9 8.3 3 4.5 6.6 4.5c2 0 3.6 1.1 5.4 3.2 1.8-2.1 3.4-3.2 5.4-3.2 3.6 0 5.7 3.8 4.2 7.2C19.5 16.3 12 21 12 21z"/></symbol>
+</defs></svg>
+
+<main class="card"><div class="inner">
+  <div class="divider"><i></i><svg><use href="#heart"/></svg><i></i></div>
+  <div class="badge"><svg viewBox="0 0 24 24"><use href="#heart"/></svg></div>
+
+  <!-- PREGUNTA -->
+  <section id="ask" style="width:100%">
+    <p class="eyebrow">Tengo algo que preguntarte</p>
+    <h1 id="pregunta">¿Quisieras tener una cita conmigo?</h1>
+    <p class="sub">Piénsalo bien… o mejor, no lo pienses tanto.</p>
+    <div class="answers">
+      <button class="btn yes" id="yes">Sí</button>
+      <span class="no-slot" id="slot"><button class="btn no" id="no">No</button></span>
+    </div>
+    <p class="oops" id="oops" aria-live="polite"></p>
+  </section>
+
+  <!-- ACEPTADO -->
+  <section id="accepted" class="hidden">
+    <p class="eyebrow">Sabía que dirías que sí</p>
+    <h1>¡Tenemos una cita!</h1>
+    <p class="sub">Ya está todo listo para nuestro plan perfecto.</p>
+    <div class="details">
+      <div class="field"><span>Fecha</span><div id="d-date"></div></div>
+      <div class="field"><span>Hora</span><div id="d-time"></div></div>
+      <div class="field full"><span>Lugar de encuentro</span><div id="d-place"></div></div>
+      <div class="mapbox hidden" id="d-map">
+        <iframe id="d-frame" title="Mapa de la cita" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <div class="map-cap"><span id="d-addr"></span><a id="d-link" target="_blank" rel="noopener">Abrir en Maps</a></div>
+      </div>
+    </div>
+    <p class="footer"><b>✧</b>Qué ilusión compartir este momento contigo<b>✧</b></p>
+  </section>
+</div></main>
+
+<script>
+/* ==========================================================
+   ✏️  EDITA AQUÍ TU CITA
+   ----------------------------------------------------------
+   nombre: el nombre de ella (si lo dejas vacío "", no aparece)
+   fecha: formato AAAA-MM-DD   (ejemplo: "2026-10-24")
+   hora:  formato 24 horas HH:MM (ejemplo: "19:30" = 7:30 PM)
+   lugar: el texto que quieras
+   direccion: la dirección escrita tal como sale en Google Maps.
+              El mapa se muestra dentro de la carta. Si la dejas vacía "", no aparece
+   ========================================================== */
+const CITA = {
+  nombre: "Nombre",
+  fecha: "2026-10-24",
+  hora:  "19:30",
+  lugar: "Nuestro café favorito",
+  direccion: "Zócalo, Centro Histórico, Ciudad de México"   // ← pega aquí la dirección
+};
+/* ========================================================== */
+
+const $ = id => document.getElementById(id);
+const no = $('no'), slot = $('slot');
+let intentos = 0;
+
+/* Pone el nombre en la pregunta */
+if (CITA.nombre && CITA.nombre.trim()) {
+  $('pregunta').textContent = `${CITA.nombre.trim()}, ¿quisieras tener una cita conmigo?`;
+}
+
+function formatear(){
+  const [y,m,d] = CITA.fecha.split('-').map(Number);
+  const f = new Date(y, m-1, d).toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  $('d-date').textContent = f.charAt(0).toUpperCase() + f.slice(1);
+  const [h,mi] = CITA.hora.split(':').map(Number);
+  $('d-time').textContent = `${((h+11)%12)+1}:${String(mi).padStart(2,'0')} ${h<12?'AM':'PM'}`;
+  $('d-place').textContent = CITA.lugar;
+  const dir = (CITA.direccion || '').trim();
+  if (dir) {
+    const q = encodeURIComponent(dir);
+    const iframeSrc = (dir.match(/src="([^"]+)"/) || [])[1];            // código <iframe> pegado
+    const embed = iframeSrc || (/google\.[a-z.]+\/maps\/embed/i.test(dir) ? dir : null); // enlace de inserción
+    const esLink = /^https?:\/\//i.test(dir);
+    const frame = $('d-frame');
+    if (embed) {
+      frame.src = embed;
+      $('d-addr').textContent = 'Ubicación de la cita';
+      $('d-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(CITA.lugar);
+    } else if (esLink) {
+      frame.remove();
+      $('d-addr').textContent = 'Ubicación de la cita';
+      $('d-link').href = dir;
+    } else {
+      frame.src = 'https://maps.google.com/maps?q=' + q + '&z=16&output=embed';
+      $('d-addr').textContent = dir;
+      $('d-link').href = 'https://www.google.com/maps/search/?api=1&query=' + q;
+    }
+    $('d-map').classList.remove('hidden');
+  }
+}
+
+function moverNo(){
+  const w = no.offsetWidth, h = no.offsetHeight, pad = 12;
+  const maxX = document.documentElement.clientWidth - w - pad;
+  const maxY = window.innerHeight - h - pad;
+  const cx = parseFloat(no.style.left) || 0, cy = parseFloat(no.style.top) || 0;
+  let x, y, t = 0;
+  do {
+    x = pad + Math.random()*(maxX-pad);
+    y = pad + Math.random()*(maxY-pad);
+    t++;
+  } while (t < 15 && Math.hypot(x-cx, y-cy) < 150);
+  no.style.left = x + 'px';
+  no.style.top = y + 'px';
+}
+
+no.addEventListener('click', () => {
+  intentos++;
+  if (intentos === 1) {
+    const r = no.getBoundingClientRect();
+    slot.style.width = r.width + 'px';
+    slot.style.height = r.height + 'px';
+    no.style.left = r.left + 'px';
+    no.style.top = r.top + 'px';
+    no.classList.add('flying');
+    void no.offsetWidth;
+    moverNo();
+  } else if (intentos === 2) {
+    moverNo();
+  } else {
+    no.classList.add('gone');
+    $('oops').textContent = 'uy parece que se escapó…';
+    setTimeout(() => { no.style.display = 'none'; }, 350);
+    $('yes').focus();
+  }
+});
+
+function confeti(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (let i = 0; i < 28; i++) {
+    const el = document.createElement('div');
+    const s = 10 + Math.random()*16;
+    el.className = 'confetti';
+    el.style.cssText = `left:${Math.random()*100}vw;top:-30px;width:${s}px;height:${s}px;opacity:${.4+Math.random()*.5};animation-duration:${3+Math.random()*3}s;animation-delay:${Math.random()*.8}s`;
+    el.innerHTML = '<svg viewBox="0 0 24 24"><use href="#heart"/></svg>';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 7500);
+  }
+}
+
+$('yes').addEventListener('click', () => {
+  formatear();
+  no.style.display = 'none';
+  $('ask').classList.add('hidden');
+  $('accepted').classList.remove('hidden');
+  confeti();
+});
+</script>
+</body>
+</html>
